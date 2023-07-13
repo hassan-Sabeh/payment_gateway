@@ -32,7 +32,7 @@ $ go run cmd/service/main.go
 It will take a few seconds to launch, by default the server will run on port:1234 on your local host, changing the port can be done in the main.go.
 
 ### Docker
-To run with docker, build the image:
+To run with docker, build the image (make sure you are at the root of the project):
 
 ```
 docker build -t payment_gateway .
