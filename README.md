@@ -11,8 +11,7 @@ the Go framework used in this project is Echo and so the project structure is co
 - hanlders: package for handler functions containing business logic for requests.
 - database: a database simulation object and methods, mocking a database for the payment gateway.
 - helpers: All helpers used throughout the project.
-- interfaces: Holds the bank interface to be implemented in the gateway.
-- bank: the implementation of the bank interface, in this case the bank simulation.
+- bank_gateway_simulation: the interface and implementation of the bank gateway, in this case the bank is a simulation.
 - models: Model objects use in requests, json binding and db.
 
 
