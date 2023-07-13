@@ -1,43 +1,34 @@
 package main
 
-import(
-	"github.com/labstack/echo/v4"
-	"errors"
+import (
+	bank "github.com/hassan-Sabeh/payment_gateway/bank_gateway_simulation"
+	db "github.com/hassan-Sabeh/payment_gateway/database"
 	handlers "github.com/hassan-Sabeh/payment_gateway/handlers"
-
+	"github.com/labstack/echo/v4"
+	// "github.com/labstack/echo/v4/middleware" //Uncomment for logging
 )
-
-type Users struct{
-	users map[int]string
-}
-
-var(
-	usersMap = map[int]string{
-		123 : "Hassan",
-		456 : "Sabeh",
-	}
-	users = Users{
-		usersMap,
-	}
-)
-
-func (u *Users) AddUserToDb(userId int, userName string) error {
-	_, ok := u.users[userId]
-	if ok {
-		return errors.New("user exists already")
-	}
-	
-	u.users[userId] = userName
-	return nil
-}
-
-
-
-
 
 func main() {
 	e := echo.New()
-	e.GET("/user", handlers.GetUser)
-	e.POST("/add-user", handlers.AddUser)
+	//init the db connection object
+	db := db.NewDbConnection()
+
+	//init bank simulation object
+	b := new(bank.BankGateway)
+
+	// e.Use(middleware.Logger()) //Uncomment for logging
+
+	//Set the database and bank simulation objects in the context
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+
+			c.Set("db", db)
+			c.Set("bank", b)
+			return next(c)
+		}
+	})
+	//Keeping routes here since there are only two
+	e.GET("/payment/:id", handlers.GetPayment)
+	e.POST("/process-payment", handlers.ProcessPayment)
 	e.Logger.Fatal(e.Start(":1234"))
 }
